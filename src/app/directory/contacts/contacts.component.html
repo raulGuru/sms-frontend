@@ -1,109 +1,88 @@
 <div class="main-card mb-3 card">
-    <div class="card-header"> Active Users </div>
-    <div class="table-responsive">
-        <table class="align-middle mb-0 table table-borderless table-striped table-hover">
-            <thead>
-                <tr>
-                    <th class="text-center">#</th>
-                    <th>Name</th>
-                    <th class="text-center">City</th>
-                    <th class="text-center">Status</th>
-                    <th class="text-center">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td class="text-center text-muted">#345</td>
-                    <td>
-                        <div class="widget-content p-0">
-                            <div class="widget-content-wrapper">
-                                <div class="widget-content-left mr-3">
-                                    <div class="widget-content-left"><img alt="" class="rounded-circle"
-                                            src="./assets/images/avatars/4.jpg" width="40"></div>
-                                </div>
-                                <div class="widget-content-left flex2">
-                                    <div class="widget-heading">John Doe</div>
-                                    <div class="widget-subheading opacity-7">Web Developer</div>
-                                </div>
-                            </div>
-                        </div>
-                    </td>
-                    <td class="text-center">Madrid</td>
-                    <td class="text-center">
-                        <div class="badge badge-warning">Pending</div>
-                    </td>
-                    <td class="text-center"><button class="btn btn-primary btn-sm" type="button">Details</button></td>
-                </tr>
-                <tr>
-                    <td class="text-center text-muted">#347</td>
-                    <td>
-                        <div class="widget-content p-0">
-                            <div class="widget-content-wrapper">
-                                <div class="widget-content-left mr-3">
-                                    <div class="widget-content-left"><img alt="" class="rounded-circle"
-                                            src="./assets/images/avatars/3.jpg" width="40"></div>
-                                </div>
-                                <div class="widget-content-left flex2">
-                                    <div class="widget-heading">Ruben Tillman</div>
-                                    <div class="widget-subheading opacity-7">Etiam sit amet orci eget</div>
-                                </div>
-                            </div>
-                        </div>
-                    </td>
-                    <td class="text-center">Berlin</td>
-                    <td class="text-center">
-                        <div class="badge badge-success">Completed</div>
-                    </td>
-                    <td class="text-center"><button class="btn btn-primary btn-sm" type="button">Details</button></td>
-                </tr>
-                <tr>
-                    <td class="text-center text-muted">#321</td>
-                    <td>
-                        <div class="widget-content p-0">
-                            <div class="widget-content-wrapper">
-                                <div class="widget-content-left mr-3">
-                                    <div class="widget-content-left"><img alt="" class="rounded-circle"
-                                            src="./assets/images/avatars/2.jpg" width="40"></div>
-                                </div>
-                                <div class="widget-content-left flex2">
-                                    <div class="widget-heading">Elliot Huber</div>
-                                    <div class="widget-subheading opacity-7">Lorem ipsum dolor sic</div>
-                                </div>
-                            </div>
-                        </div>
-                    </td>
-                    <td class="text-center">London</td>
-                    <td class="text-center">
-                        <div class="badge badge-danger">In Progress</div>
-                    </td>
-                    <td class="text-center"><button class="btn btn-primary btn-sm" type="button">Details</button></td>
-                </tr>
-                <tr>
-                    <td class="text-center text-muted">#55</td>
-                    <td>
-                        <div class="widget-content p-0">
-                            <div class="widget-content-wrapper">
-                                <div class="widget-content-left mr-3">
-                                    <div class="widget-content-left"><img alt="" class="rounded-circle"
-                                            src="./assets/images/avatars/1.jpg" width="40"></div>
-                                </div>
-                                <div class="widget-content-left flex2">
-                                    <div class="widget-heading">Vinnie Wagstaff</div>
-                                    <div class="widget-subheading opacity-7">UI Designer</div>
-                                </div>
-                            </div>
-                        </div>
-                    </td>
-                    <td class="text-center">Amsterdam</td>
-                    <td class="text-center">
-                        <div class="badge badge-info">On Hold</div>
-                    </td>
-                    <td class="text-center"><button class="btn btn-primary btn-sm" type="button">Details</button></td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-    <div class="d-block text-center card-footer"><button class="mr-2 btn-icon btn-icon-only btn btn-outline-danger"><i
-                class="pe-7s-trash btn-icon-wrapper"></i></button><button class="btn-wide btn btn-success">Save</button>
+    <div class="card-header">
+        <div class="btn-actions-pane-right">
+            <button class="mr-5 btn-hover-shine btn btn-lg btn-shadow btn-primary" (click)="open(content)">Add Contact
+            </button>
+        </div>
     </div>
 </div>
+
+<ng-template #content let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">Add Contact</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('close')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="contactForm" (ngSubmit)="onSubContactForm()">
+            <div class="form-group">
+                <input class="form-control" type="text" formControlName="name" placeholder="Full name (optional)"
+                    maxlength="40">
+            </div>
+            <div class="form-group">
+                <input class="form-control" type="tel" maxlength="20" formControlName="mobile"
+                    placeholder="Mobile Number" required
+                    [ngClass]="{ 'is-invalid': f.mobile.invalid && (f.mobile.dirty || f.mobile.touched) }">
+                <em *ngIf="f.mobile.invalid && (f.mobile.dirty || f.mobile.touched)" class="error invalid-feedback">
+                    <span *ngIf="f.mobile.errors.required">
+                        Mobile Number is required.
+                    </span>
+                    <span *ngIf="f.mobile.errors.minlength">
+                        Mobile must be at least 10 characters long.
+                    </span>
+                </em>
+            </div>
+            <div class="form-group">
+                <input class="form-control" type="text" formControlName="email" maxlength="40"
+                    placeholder="Email address (optional)"
+                    [ngClass]="{ 'is-invalid': f.email.invalid && (f.mobile.dirty || f.email.touched) }">
+                <em *ngIf="f.email.invalid && (f.email.dirty || f.email.touched)" class="error invalid-feedback">
+                    <span *ngIf="f.email.errors.email">
+                        Invalid email format
+                    </span>
+                </em>
+            </div>
+            <div class="form-group">
+                <input class="form-control" type="text" formControlName="city" maxlength="20"
+                    placeholder="City (optional)">
+            </div>
+            <div class="form-group">
+                <input class="form-control" type="text" formControlName="state" maxlength="30"
+                    placeholder="State (optional)">
+            </div>
+            <div class="form-group">
+                <select class="form-control" formControlName="tags">
+                    <option>Tags</option>
+                </select>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <label class="col-form-label">Custom Fields</label>
+                </div>
+                <div class="col-md-12" formArrayName="fields">
+                    <div *ngFor="let field of fields.controls; let i=index">
+                        <ng-container [formGroupName]="i">
+                            <a class="ion-android-delete float-right text-dark" (click)="delFields(i)"
+                                href="javascript:;"></a>
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="Field" formControlName="cField">
+                            </div>
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="Value" formControlName="cValue">
+                            </div>
+                        </ng-container>
+                    </div>
+                </div>
+                <a class="ion-android-add float-left text-dark" (click)="addFields()"
+                    style="color: blue; cursor: pointer;">Add</a>
+            </div>
+            <div class="row justify-content-end">
+                <div class="col-3 align-self-end">
+                    <button type="submit" class="btn-block btn-hover-shine btn btn-lg btn-shadow btn-primary"
+                        [disabled]="!contactForm.valid">Save</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</ng-template>
