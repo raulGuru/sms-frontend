@@ -1,1 +1,39 @@
-<p>tags works!</p>
+<div class="main-card mb-3 card">
+    <div class="card-header">
+        <div class="btn-actions-pane-right">
+            <button class="mr-5 btn-hover-shine btn btn-lg btn-shadow btn-primary" (click)="open(addtag)">Add Tag
+            </button>
+        </div>
+    </div>
+</div>
+
+<ng-template #addtag let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">Add Contact</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('close')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="tagForm" (ngSubmit)="submitAddTag()" novalidate>
+            <div class="form-group">
+                <input class="form-control" type="text" formControlName="name" required placeholder="Tag (required)" maxlength="40"
+                [ngClass]="{ 'is-invalid': f.name.invalid && (f.name.dirty || f.name.touched) }">
+                <em *ngIf="f.name.invalid && (f.name.dirty || f.name.touched)" class="error invalid-feedback">
+                    <span *ngIf="f.name.errors.required">
+                        Tag name is required.
+                    </span>
+                </em>
+            </div>
+            <div class="form-group">
+                <textarea class="form-control" formControlName="description" placeholder="Description (optional)" maxlength="100" rows="6"></textarea>
+            </div>
+            <div class="row justify-content-end">
+                <div class="col-3 align-self-end">
+                    <button type="submit" class="btn-block btn-hover-shine btn btn-lg btn-shadow btn-primary"
+                        [disabled]="!tagForm.valid">Save</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</ng-template>

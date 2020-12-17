@@ -1,13 +1,51 @@
 <div class="main-card mb-3 card">
     <div class="card-header">
         <div class="btn-actions-pane-right">
-            <button class="mr-5 btn-hover-shine btn btn-lg btn-shadow btn-primary" (click)="open(content)">Add Contact
+            <button class="mr-5 btn-hover-shine btn btn-lg btn-shadow btn-primary" (click)="openAdd(addContact)">Add
+                Contact
             </button>
         </div>
     </div>
 </div>
 
-<ng-template #content let-c="close" let-d="dismiss">
+<div class="main-card mb-3 card">
+    <div class="table-responsive">
+        <table class="align-middle mb-0 table table-borderless table-striped table-hover">
+            <thead>
+                <tr>
+                    <th class="text-center">#</th>
+                    <th>Name</th>
+                    <th class="text-center">Number</th>
+                    <th class="text-center">Email</th>
+                    <th class="text-center">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let row of contacts">
+                    <td class="text-center text-muted">#{{row.id}}</td>
+                    <td>{{row.name}}</td>
+                    <td class="text-center">{{row.mobile}}</td>
+                    <td class="text-center">{{row.email}}</td>
+                    <td class="text-center">
+                        <div class="btn-group btn-group-sm">
+                            <button class="btn-shadow btn btn-primary btn-hover-shine"
+                                (click)="openView(viewContact, row.id)">View</button>
+                            <button type="button" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown"
+                                class="dropdown-toggle-split dropdown-toggle btn btn-primary btn-shadow"></button>
+                            <div role="menu" aria-hidden="true" class="dropdown-menu-shadow dropdown-menu"
+                                x-placement="bottom-start"
+                                style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 33px, 0px);">
+                                <button type="button" class="dropdown-item" (click)="openEdit(addContact, row.id)">Edit</button>
+                                <button type="button" class="dropdown-item" (click)="deleteContact(row.id)">Delete</button>
+                            </div>
+                        </div>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<ng-template #addContact let-c="close" let-d="dismiss">
     <div class="modal-header">
         <h4 class="modal-title">Add Contact</h4>
         <button type="button" class="close" aria-label="Close" (click)="d('close')">
@@ -52,8 +90,9 @@
                     placeholder="State (optional)">
             </div>
             <div class="form-group">
-                <select class="form-control" formControlName="tags">
-                    <option>Tags</option>
+                <select class="form-control" formControlName="tags" multiple>
+                    <option value="Tag1">Tag1</option>
+                    <option value="Tag1">Tag2</option>
                 </select>
             </div>
             <div class="row">
@@ -66,10 +105,10 @@
                             <a class="ion-android-delete float-right text-dark" (click)="delFields(i)"
                                 href="javascript:;"></a>
                             <div class="form-group">
-                                <input type="text" class="form-control" placeholder="Field" formControlName="cField">
+                                <input type="text" class="form-control" placeholder="Field" formControlName="field">
                             </div>
                             <div class="form-group">
-                                <input type="text" class="form-control" placeholder="Value" formControlName="cValue">
+                                <input type="text" class="form-control" placeholder="Value" formControlName="value">
                             </div>
                         </ng-container>
                     </div>
@@ -84,5 +123,102 @@
                 </div>
             </div>
         </form>
+    </div>
+</ng-template>
+
+<ng-template #viewContact let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">View Contact</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('close')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-md-12">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <div class="widget-content p-0">
+                            <div class="widget-content-wrapper">
+                                <div class="widget-content-left">
+                                    <div class="widget-subheading">Full Name</div>
+                                    <div class="widget-heading">{{ contact?.name }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <div class="widget-content p-0">
+                            <div class="widget-content-wrapper">
+                                <div class="widget-content-left">
+                                    <div class="widget-subheading">Mobile Number</div>
+                                    <div class="widget-heading">{{ contact?.mobile }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <div class="widget-content p-0">
+                            <div class="widget-content-wrapper">
+                                <div class="widget-content-left">
+                                    <div class="widget-subheading">Email</div>
+                                    <div class="widget-heading">{{ contact?.email }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <div class="widget-content p-0">
+                            <div class="widget-content-wrapper">
+                                <div class="widget-content-left">
+                                    <div class="widget-subheading">City</div>
+                                    <div class="widget-heading">{{ contact?.city }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <div class="widget-content p-0">
+                            <div class="widget-content-wrapper">
+                                <div class="widget-content-left">
+                                    <div class="widget-subheading">State</div>
+                                    <div class="widget-heading">{{ contact?.state }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-12">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <div class="widget-content p-0">
+                            <div class="widget-content-wrapper">
+                                <div class="widget-content-left">
+                                    <div class="widget-subheading">Tags</div>
+                                    <div class="widget-heading">{{ contact?.tags.join(', ') }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </div>
 </ng-template>
