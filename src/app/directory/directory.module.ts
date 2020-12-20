@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import {NgbPaginationModule, NgbAlertModule} from '@ng-bootstrap/ng-bootstrap';
 
 import { DirectoryRoutingModule } from './directory-routing.module';
 import { DirectoryComponent } from './directory/directory.component';
@@ -17,6 +18,7 @@ import { DirectoryService} from './directory.service'
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
+    NgbPaginationModule,
     DirectoryRoutingModule,
     LayoutModule,
   ],

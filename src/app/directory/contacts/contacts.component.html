@@ -44,6 +44,10 @@
         </table>
     </div>
 </div>
+<nav class="pagination-rounded">
+    <ngb-pagination [collectionSize]="totalItems" [pageSize]="perPage" [(page)]="page" [maxSize]="5" [rotate]="true" (pageChange)="loadPage($event)"></ngb-pagination>
+
+</nav>
 
 <ng-template #addContact let-c="close" let-d="dismiss">
     <div class="modal-header">

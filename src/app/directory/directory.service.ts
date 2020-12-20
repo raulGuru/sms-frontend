@@ -20,7 +20,7 @@ export class DirectoryService {
   constructor(private http: HttpClient) { }
 
   addContact(contact): Observable<Contact> {
-    return this.http.post<Contact>(this.apiServer + '/contacts/', JSON.stringify(contact), this.httpOptions)
+    return this.http.post<Contact>(`${this.apiServer}/contacts/`, JSON.stringify(contact), this.httpOptions)
     .pipe(
       // map(response => {
       //   return response; 
@@ -29,29 +29,35 @@ export class DirectoryService {
     );
   }
 
-  allContact(): Observable<Contact[]> {
-    return this.http.get<Contact[]>(this.apiServer + '/contacts/')
+  allContact(params): Observable<any> {
+    return this.http.get<any>(`${this.apiServer}/contacts?_start=${params.page}&_limit=${params.limit}`, {observe: 'response'})
     .pipe(
+      map(res => {
+        return {
+          'total': res.headers.get('X-Total-Count'),
+          'data' : res.body
+        }
+      }),
       catchError(this.errorHandler)
     )
   }
 
   contactById(id): Observable<Contact> {
-    return this.http.get<Contact>(this.apiServer + '/contacts/' + id)
+    return this.http.get<Contact>(`${this.apiServer}/contacts/${id}`)
     .pipe(
       catchError(this.errorHandler)
     )
   }
 
   updateContact(id, contact): Observable<Contact> {
-    return this.http.put<Contact>(this.apiServer + '/contacts/' + id, JSON.stringify(contact), this.httpOptions)
+    return this.http.put<Contact>(`${this.apiServer}/contacts/${id}`, JSON.stringify(contact), this.httpOptions)
     .pipe(
       catchError(this.errorHandler)
     );
   }
 
   deleteById(id){
-    return this.http.delete<Contact>(this.apiServer + '/contacts/' + id, this.httpOptions)
+    return this.http.delete<Contact>(`${this.apiServer}/contacts/${id}`, this.httpOptions)
     .pipe(
       catchError(this.errorHandler)
     )

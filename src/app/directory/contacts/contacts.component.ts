@@ -12,12 +12,19 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./contacts.component.scss'],
 })
 export class ContactsComponent implements OnInit {
+  // Form
   contactForm: FormGroup;
   contacts: Contact[] = [];
   contactId: number;
+  contact: any;
+  // Modal
   modalReference: NgbModalRef;
   editModalRef: NgbModalRef;
-  contact: any;
+  // Pagination
+  page: number = 1;
+  perPage: number = 2;
+  previousPage: number;
+  totalItems: number;
 
   constructor(
     private modalService: NgbModal,
@@ -45,6 +52,33 @@ export class ContactsComponent implements OnInit {
     this.getContacts();
   }
 
+  getContacts() {
+    this.toastr.info('Getting Contact(s)...', 'Working...', { timeOut: 2000 });
+    const params = {
+      page: this.page,
+      limit: this.perPage,
+    }
+    this.directoryService.allContact(params).subscribe(
+      (response) => {
+        this.toastr.success('Contact(s) Loaded', 'Awesome!', { timeOut: 2000 });
+        this.contacts = response.data;
+        this.totalItems = response.total;
+      },
+      (error) => {
+        this.toastr.error('Sorry, something went wrong', 'Error!', {
+          timeOut: 2000,
+        });
+      }
+    );
+  }
+
+  loadPage(page: number) {
+    if (page !== this.previousPage) {
+      this.previousPage = page;
+      this.getContacts();
+    }
+  }
+
   get fields() {
     return this.contactForm.get('fields') as FormArray;
   }
@@ -68,20 +102,9 @@ export class ContactsComponent implements OnInit {
     return this.contactForm.controls;
   }
 
-  getContacts() {
-    this.toastr.info('Getting Contact(s)...', 'Working...', { timeOut: 2000 });
-    this.directoryService.allContact().subscribe(
-      (response) => {
-        this.toastr.success('Contact(s) Loaded', 'Awesome!', { timeOut: 2000 });
-        this.contacts = response;
-      },
-      (error) => {
-        this.toastr.error('Sorry, something went wrong', 'Error!', {
-          timeOut: 2000,
-        });
-      }
-    );
-  }
+
+
+  
 
   onSubContactForm() {
     this.contactForm.value.id =
