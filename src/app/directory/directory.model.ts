@@ -13,3 +13,9 @@ interface fieldsArr {
     field: string,
     value: string
 }
+
+export interface Tag {
+    id: number,
+    name: string,
+    description: string
+}

@@ -16,7 +16,7 @@ export class ContactsComponent implements OnInit {
   contactForm: FormGroup;
   contacts: Contact[] = [];
   contactId: number;
-  contact: any;
+  contact: Contact;
   // Modal
   modalReference: NgbModalRef;
   editModalRef: NgbModalRef;
@@ -62,7 +62,7 @@ export class ContactsComponent implements OnInit {
       (response) => {
         this.toastr.success('Contact(s) Loaded', 'Awesome!', { timeOut: 2000 });
         this.contacts = response.data;
-        this.totalItems = response.total;
+        this.totalItems = +response.total;
       },
       (error) => {
         this.toastr.error('Sorry, something went wrong', 'Error!', {
@@ -102,13 +102,8 @@ export class ContactsComponent implements OnInit {
     return this.contactForm.controls;
   }
 
-
-
-  
-
   onSubContactForm() {
-    this.contactForm.value.id =
-      this.contactId || Math.floor(Math.random() * 1000);
+    this.contactForm.value.id = this.contactId;
     console.log(this.contactForm.value);
     if (this.contactId) {
       this.onUpdateForm();
@@ -152,18 +147,17 @@ export class ContactsComponent implements OnInit {
   }
 
   openAdd(content) {
+    this.contactForm.reset();
     this.modalReference = this.modalService.open(content, {
       size: 'md',
     });
     this.modalReference.result.then(
       (result) => {},
-      (response) => {
-        this.contactForm.reset();
-      }
+      (response) => {}
     );
   }
 
-  openView(content, id) {
+  openView(content: any, id: number) {
     this.toastr.info('Getting Contact...', 'Working...', { timeOut: 2000 });
     this.directoryService.contactById(id).subscribe(
       (res) => {
@@ -175,9 +169,7 @@ export class ContactsComponent implements OnInit {
           })
           .result.then(
             (result) => {},
-            (response) => {
-              this.contactForm.reset();
-            }
+            (response) => {}
           );
       },
       (error) => {
@@ -190,6 +182,7 @@ export class ContactsComponent implements OnInit {
 
   openEdit(content, id) {
     this.toastr.info('Working...', 'Getting Contact...', { timeOut: 2000 });
+    this.contactForm.reset();
     this.directoryService.contactById(id).subscribe(
       (res) => {
         this.toastr.success('Awesome!', 'View Contact', { timeOut: 2000 });
@@ -218,9 +211,7 @@ export class ContactsComponent implements OnInit {
         });
         this.editModalRef.result.then(
           (result) => {},
-          (response) => {
-            this.contactForm.reset();
-          }
+          (response) => {}
         );
       },
       (error) => {

@@ -29,6 +29,7 @@
             "scripts": [
               "src/assets/js/vendors/jquery-3.4.0.min.js",
               "src/assets/js/vendors/bootstrap.bundle.min.js",
+              "src/assets/js/vendors/metismenu.js",
               "src/assets/js/scripts-init/app.min.js",
               "src/assets/js/scripts-init/demo.min.js"
             ]

@@ -1,21 +1,61 @@
 <div class="main-card mb-3 card">
     <div class="card-header">
         <div class="btn-actions-pane-right">
-            <button class="mr-5 btn-hover-shine btn btn-lg btn-shadow btn-primary" (click)="open(addtag)">Add Tag
+            <button class="mr-5 btn-hover-shine btn btn-lg btn-shadow btn-primary" (click)="openAdd(addtag)">Add Tag
             </button>
         </div>
     </div>
 </div>
 
+<div class="main-card mb-3 card">
+    <div class="table-responsive">
+        <table class="align-middle mb-0 table table-borderless table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th class="text-left">Tag</th>
+                    <th class="text-left">Description</th>
+                    <th class="text-center">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let row of tags">
+                    <td>#{{row.id}}</td>
+                    <td class="text-left">{{row.name}}</td>
+                    <td class="text-left">{{row.description}}</td>
+                    <td class="text-center">
+                        <div class="btn-group btn-group-sm">
+                            <button class="btn-shadow btn btn-primary btn-hover-shine"
+                                (click)="openView(viewTag, row.id)">View</button>
+                            <button type="button" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown"
+                                class="dropdown-toggle-split dropdown-toggle btn btn-primary btn-shadow"></button>
+                            <div role="menu" aria-hidden="true" class="dropdown-menu-shadow dropdown-menu"
+                                x-placement="bottom-start"
+                                style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 33px, 0px);">
+                                <button type="button" class="dropdown-item" (click)="openEdit(addtag, row.id)">Edit</button>
+                                <button type="button" class="dropdown-item" (click)="deleteTag(row.id)">Delete</button>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<nav *ngIf="totalItems > 0" class="pagination-rounded">
+    <ngb-pagination [collectionSize]="totalItems" [pageSize]="perPage" [(page)]="page" [maxSize]="5" [rotate]="true" (pageChange)="loadPage($event)"></ngb-pagination>
+
+</nav>
+
 <ng-template #addtag let-c="close" let-d="dismiss">
     <div class="modal-header">
-        <h4 class="modal-title">Add Contact</h4>
+        <h4 class="modal-title">Add Tag</h4>
         <button type="button" class="close" aria-label="Close" (click)="d('close')">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
     <div class="modal-body">
-        <form [formGroup]="tagForm" (ngSubmit)="submitAddTag()" novalidate>
+        <form [formGroup]="tagForm" (ngSubmit)="submitTag()" novalidate>
             <div class="form-group">
                 <input class="form-control" type="text" formControlName="name" required placeholder="Tag (required)" maxlength="40"
                 [ngClass]="{ 'is-invalid': f.name.invalid && (f.name.dirty || f.name.touched) }">
@@ -35,5 +75,44 @@
                 </div>
             </div>
         </form>
+    </div>
+</ng-template>
+
+<ng-template #viewTag let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">View Tag</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('close')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    <div class="widget-content p-0">
+                        <div class="widget-content-wrapper">
+                            <div class="widget-content-left">
+                                <div class="widget-subheading">Tag Name</div>
+                                <div class="widget-heading">{{ tag?.name }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="col-md-12">
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    <div class="widget-content p-0">
+                        <div class="widget-content-wrapper">
+                            <div class="widget-content-left">
+                                <div class="widget-subheading">Description</div>
+                                <div class="widget-heading">{{ tag?.description }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
     </div>
 </ng-template>
