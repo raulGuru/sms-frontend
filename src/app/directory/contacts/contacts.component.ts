@@ -1,17 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 
 import { Contact } from '../directory.model';
 import { DirectoryService } from '../directory.service';
 import { ToastrService } from 'ngx-toastr';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-contacts',
   templateUrl: './contacts.component.html',
   styleUrls: ['./contacts.component.scss'],
 })
-export class ContactsComponent implements OnInit {
+export class ContactsComponent implements OnInit, OnDestroy {
   // Form
   contactForm: FormGroup;
   contacts: Contact[] = [];
@@ -25,6 +26,11 @@ export class ContactsComponent implements OnInit {
   perPage: number = 2;
   previousPage: number;
   totalItems: number;
+  allContactSub: Subscription;
+  addSub: Subscription;
+  updateSub: Subscription;
+  contactIdSub: Subscription;
+  deleteSub: Subscription;
 
   constructor(
     private modalService: NgbModal,
@@ -58,7 +64,7 @@ export class ContactsComponent implements OnInit {
       page: this.page,
       limit: this.perPage,
     }
-    this.directoryService.allContact(params).subscribe(
+    this.allContactSub = this.directoryService.allContact(params).subscribe(
       (response) => {
         this.toastr.success('Contact(s) Loaded', 'Awesome!', { timeOut: 2000 });
         this.contacts = response.data;
@@ -110,7 +116,7 @@ export class ContactsComponent implements OnInit {
       return;
     }
     this.toastr.info('Adding Contact...', 'Working...', { timeOut: 2000 });
-    this.directoryService.addContact(this.contactForm.value).subscribe(
+    this.addSub = this.directoryService.addContact(this.contactForm.value).subscribe(
       (response) => {
         this.toastr.success('Contact Added Successfully', 'Awesome!', {
           timeOut: 2000,
@@ -128,7 +134,7 @@ export class ContactsComponent implements OnInit {
 
   onUpdateForm() {
     this.toastr.info('Updating Contact...', 'Working...', { timeOut: 2000 });
-    this.directoryService
+    this.updateSub = this.directoryService
       .updateContact(this.contactId, this.contactForm.value)
       .subscribe(
         (response) => {
@@ -159,7 +165,7 @@ export class ContactsComponent implements OnInit {
 
   openView(content: any, id: number) {
     this.toastr.info('Getting Contact...', 'Working...', { timeOut: 2000 });
-    this.directoryService.contactById(id).subscribe(
+    this.contactIdSub = this.directoryService.contactById(id).subscribe(
       (res) => {
         this.toastr.success('View Contact', 'Awesome!', { timeOut: 2000 });
         this.contact = res;
@@ -183,7 +189,7 @@ export class ContactsComponent implements OnInit {
   openEdit(content, id) {
     this.toastr.info('Working...', 'Getting Contact...', { timeOut: 2000 });
     this.contactForm.reset();
-    this.directoryService.contactById(id).subscribe(
+    this.contactIdSub = this.directoryService.contactById(id).subscribe(
       (res) => {
         this.toastr.success('Awesome!', 'View Contact', { timeOut: 2000 });
         this.contactId = res.id;
@@ -224,7 +230,7 @@ export class ContactsComponent implements OnInit {
 
   deleteContact(id: number) {
     this.toastr.info('Working...', 'Deleting Contact...', { timeOut: 2000 });
-    this.directoryService.deleteById(id).subscribe(
+    this.deleteSub = this.directoryService.deleteById(id).subscribe(
       (res) => {
         this.toastr.success('Awesome!', 'Contact Deleted', { timeOut: 2000 });
         this.getContacts();
@@ -235,5 +241,23 @@ export class ContactsComponent implements OnInit {
         });
       }
     );
+  }
+
+  ngOnDestroy() {
+    if(this.allContactSub) {
+      this.allContactSub.unsubscribe();
+    }
+    if(this.contactIdSub) {
+      this.allContactSub.unsubscribe();
+    }
+    if(this.contactIdSub) {
+      this.contactIdSub.unsubscribe();
+    }
+    if(this.deleteSub) {
+      this.deleteSub.unsubscribe();
+    }
+    if(this.addSub) {
+      this.addSub.unsubscribe();
+    }
   }
 }
