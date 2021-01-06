@@ -13,7 +13,7 @@
         <table class="align-middle mb-0 table table-borderless table-striped table-hover">
             <thead>
                 <tr>
-                    <th class="text-center">#</th>
+                    <th class="">#</th>
                     <th>Name</th>
                     <th class="text-center">Number</th>
                     <th class="text-center">Email</th>
@@ -22,21 +22,21 @@
             </thead>
             <tbody>
                 <tr *ngFor="let row of contacts">
-                    <td class="text-center text-muted">#{{row.id}}</td>
+                    <td class="text-muted">#{{row._id}}</td>
                     <td>{{row.name}}</td>
                     <td class="text-center">{{row.mobile}}</td>
                     <td class="text-center">{{row.email}}</td>
                     <td class="text-center">
                         <div class="btn-group btn-group-sm">
                             <button class="btn-shadow btn btn-primary btn-hover-shine"
-                                (click)="openView(viewContact, row.id)">View</button>
+                                (click)="openView(viewContact, row._id)">View</button>
                             <button type="button" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown"
                                 class="dropdown-toggle-split dropdown-toggle btn btn-primary btn-shadow"></button>
                             <div role="menu" aria-hidden="true" class="dropdown-menu-shadow dropdown-menu"
                                 x-placement="bottom-start"
                                 style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 33px, 0px);">
-                                <button type="button" class="dropdown-item" (click)="openEdit(addContact, row.id)">Edit</button>
-                                <button type="button" class="dropdown-item" (click)="deleteContact(row.id)">Delete</button>
+                                <button type="button" class="dropdown-item" (click)="openEdit(addContact, row._id)">Edit</button>
+                                <button type="button" class="dropdown-item" (click)="deleteContact(row._id)">Delete</button>
                             </div>
                         </div>
                     </td>

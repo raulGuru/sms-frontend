@@ -109,7 +109,7 @@ export class ContactsComponent implements OnInit, OnDestroy {
   }
 
   onSubContactForm() {
-    this.contactForm.value.id = this.contactId;
+    this.contactForm.value._id = this.contactId;
     console.log(this.contactForm.value);
     if (this.contactId) {
       this.onUpdateForm();
@@ -118,11 +118,12 @@ export class ContactsComponent implements OnInit, OnDestroy {
     this.toastr.info('Adding Contact...', 'Working...', { timeOut: 2000 });
     this.addSub = this.directoryService.addContact(this.contactForm.value).subscribe(
       (response) => {
+        console.log(response);
         this.toastr.success('Contact Added Successfully', 'Awesome!', {
           timeOut: 2000,
         });
-        this.getContacts();
-        this.modalReference.close();
+        //this.getContacts();
+        //this.modalReference.close();
       },
       (error) => {
         this.toastr.error('Sorry, something went wrong', 'Error!', {
@@ -156,6 +157,7 @@ export class ContactsComponent implements OnInit, OnDestroy {
     this.contactForm.reset();
     this.modalReference = this.modalService.open(content, {
       size: 'md',
+      backdrop: 'static',
     });
     this.modalReference.result.then(
       (result) => {},
@@ -192,7 +194,7 @@ export class ContactsComponent implements OnInit, OnDestroy {
     this.contactIdSub = this.directoryService.contactById(id).subscribe(
       (res) => {
         this.toastr.success('Awesome!', 'View Contact', { timeOut: 2000 });
-        this.contactId = res.id;
+        this.contactId = res._id;
         this.contactForm.patchValue({
           name: res.name,
           mobile: res.mobile,

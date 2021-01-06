@@ -1,8 +1,9 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import {NgbPaginationModule, NgbAlertModule} from '@ng-bootstrap/ng-bootstrap';
+import { AuthInterceptor } from '../auth/auth-interceptor';
 
 import { DirectoryRoutingModule } from './directory-routing.module';
 import { DirectoryComponent } from './directory/directory.component';
@@ -23,7 +24,8 @@ import { DirectoryService} from './directory.service'
     LayoutModule,
   ],
   providers: [
-    DirectoryService
+    DirectoryService,
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
   ]
 })
 export class DirectoryModule {}

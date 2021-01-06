@@ -3,9 +3,9 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { catchError, map } from 'rxjs/operators';
 import { Observable, Subject, throwError } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 import { AuthData } from './auth-data.model';
-import { environment } from '../../environments/environment';
 
 //const BACKEND_URL = environment.apiUrl + "/user/";
 const BACKEND_URL = environment.apiUrl + '/auth';
@@ -92,6 +92,7 @@ export class AuthService {
   }
 
   setAuthToken(tokenObj: any) {
+    debugger;
     this.token = tokenObj?.token;
     if (this.token) {
       const expiresInDuration = tokenObj.expiresIn;

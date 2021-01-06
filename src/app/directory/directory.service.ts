@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
 
 import { Contact, Tag } from './directory.model';
 
@@ -9,7 +10,7 @@ import { Contact, Tag } from './directory.model';
   providedIn: 'root',
 })
 export class DirectoryService {
-  private apiServer = 'http://localhost:3000';
+  private apiServer = environment.apiUrl + '/directory';
   httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json',
@@ -23,7 +24,7 @@ export class DirectoryService {
   addContact(contact): Observable<Contact> {
     return this.http
       .post<Contact>(
-        `${this.apiServer}/contacts/`,
+        `${this.apiServer}/contacts`,
         JSON.stringify(contact),
         this.httpOptions
       )
@@ -38,14 +39,13 @@ export class DirectoryService {
   allContact(params): Observable<any> {
     return this.http
       .get<any>(
-        `${this.apiServer}/contacts?_start=${params.page}&_limit=${params.limit}`,
-        { observe: 'response' }
+        `${this.apiServer}/contacts?page=${params.page}&limit=${params.limit}`
       )
       .pipe(
         map((res) => {
           return {
-            total: res.headers.get('X-Total-Count'),
-            data: res.body,
+            total: res.count,
+            data: res.data,
           };
         }),
         catchError(this.errorHandler)
